@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Fidelity · two‑factor (OTP)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #F9F7F5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- nav ---- */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      min-height: 64px;
+      padding: 8px 20px;
+      background-color: #ffffff;
+    }
+
+    .nav-bar .logo img {
+      height: 33px;
+      display: block;
+      max-width: 100%;
+    }
+
+    .nav-bar .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-bar .nav-links a {
+      color: #333333;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .nav-bar .nav-links a:hover {
+      color: #1a7a3c;
+      text-decoration: underline;
+    }
+
+    /* ---- login section (OTP card) ---- */
+    .login-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 0;
+      flex: 1 0 auto;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 464px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      border: 1px solid #d0d0d0;
+      padding: 40px 24px;
+      margin-top: 16px;
+    }
+
+    .login-card h1 {
+      font-size: 28px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .login-card .subhead {
+      font-size: 15px;
+      color: #3d3d3d;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    /* ---- OTP specific ---- */
+    .otp-code-group {
+      margin-bottom: 20px;
+    }
+
+    .otp-code-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .otp-input-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .otp-digit {
+      width: 56px;
+      height: 56px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 600;
+      border: 1px solid #767676;
+      border-radius: 8px;
+      background-color: #fff;
+      transition: outline 0.1s, border-color 0.1s;
+      flex: 0 0 auto;
+      caret-color: #1a7a3c;
+    }
+
+    .otp-digit:focus {
+      outline: 2px solid #1a7a3c;
+      outline-offset: -1px;
+      border-color: #1a7a3c;
+    }
+
+    /* hide spinners */
+    .otp-digit::-webkit-outer-spin-button,
+    .otp-digit::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .otp-digit[type="number"] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .otp-helper {
+      font-size: 14px;
+      color: #444;
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 18px;
+    }
+
+    .otp-helper .resend-link {
+      color: #1E3986;
+      text-decoration: underline;
+      font-weight: 500;
+      cursor: default;
+    }
+
+    .otp-helper .resend-link:hover {
+      color: #0f2666;
+    }
+
+    .otp-helper .timer {
+      color: #555;
+      font-weight: 400;
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 48px;
+      background-color: #418442;
+      color: #ffffff;
+      border: none;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      transition: background-color 0.2s;
+    }
+
+    .login-btn:hover {
+      background-color: #366b37;
+    }
+
+    .back-link {
+      display: inline-block;
+      font-size: 15px;
+      color: #1E3986;
+      text-decoration: underline;
+      margin-bottom: 4px;
+    }
+
+    .signup-line {
+      text-align: center;
+      font-size: 15px;
+      margin-top: 28px;
+      color: #333333;
+      padding: 0 8px;
+    }
+
+    .signup-line a {
+      color: #1E3986;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    /* ---- disclaimer ---- */
+    .disclaimer {
+      width: 100%;
+      max-width: 756px;
+      margin: 40px auto 0;
+      padding: 24px 16px 40px;
+      border-top: 1px solid #d0d0d0;
+      font-size: 13px;
+      color: #333333;
+    }
+
+    .disclaimer h2 {
+      font-size: 15px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .disclaimer a {
+      color: #1E3986;
+      text-decoration: underline;
+      word-break: break-word;
+    }
+
+    .disclaimer p {
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .ext-icon {
+      font-size: 11px;
+      text-decoration: none;
+      display: inline-block;
+      margin-left: 2px;
+    }
+
+    /* ---- footer ---- */
+    .site-footer {
+      background-color: #ffffff;
+      padding: 20px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      margin-top: 28px;
+      border-top: 1px solid #e8e6e4;
+      width: 100%;
+    }
+
+    .site-footer .copyright,
+    .site-footer .footer-links,
+    .site-footer .us-only {
+      font-size: 13px;
+      color: #333333;
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    .site-footer .footer-links a {
+      color: #333333;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    .site-footer .footer-links a:hover {
+      color: #1a7a3c;
+    }
+
+    .site-footer .us-only {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* ---- responsive ---- */
+    @media (max-width: 600px) {
+      .nav-bar {
+        padding: 8px 16px;
+        flex-direction: row;
+        align-items: center;
+      }
+      .nav-bar .nav-links {
+        gap: 16px;
+      }
+      .nav-bar .nav-links a {
+        font-size: 14px;
+      }
+      .login-card {
+        padding: 32px 18px;
+        margin-top: 12px;
+      }
+      .login-card h1 {
+        font-size: 24px;
+      }
+      .otp-digit {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+      }
+      .otp-input-row {
+        gap: 6px;
+      }
+      .disclaimer {
+        padding: 20px 12px 32px;
+        margin-top: 28px;
+      }
+      .site-footer {
+        padding: 16px 16px 20px;
+        align-items: center;
+      }
+      .site-footer .copyright,
+      .site-footer .footer-links,
+      .site-footer .us-only {
+        text-align: center;
+        width: 100%;
+      }
+      .site-footer .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 10px;
+      }
+      .site-footer .footer-links a {
+        white-space: normal;
+      }
+      .signup-line {
+        font-size: 14px;
+        margin-top: 24px;
+      }
+      .back-link {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .nav-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 16px;
+      }
+      .nav-bar .nav-links {
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .login-card {
+        padding: 24px 16px;
+      }
+      .login-card h1 {
+        font-size: 22px;
+      }
+      .otp-digit {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+      }
+      .otp-input-row {
+        gap: 5px;
+      }
+      .login-btn {
+        height: 44px;
+        font-size: 15px;
+      }
+      .otp-helper {
+        font-size: 13px;
+        gap: 6px 12px;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .login-btn {
+        min-height: 48px;
+      }
+      .otp-digit {
+        min-height: 48px;
+      }
+    }
+
+    /* small extra: improve tap on resend */
+    .otp-helper .resend-link {
+      padding: 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="nav-bar">
+      <div class="logo">
+        <img src="https://digital.fidelity.com/prgw/digital/signin/assets/images/Fid_Wordmark-Logo_Green.svg" alt="Fidelity">
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Security</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+
+    <div class="login-section">
+      <div class="login-card">
+        <h1>Two‑factor authentication</h1>
+        <div class="subhead">Enter the 6‑digit code sent to your device.</div>
+
+        <form id="otpForm" autocomplete="off">
+          <div class="otp-code-group">
+            <label for="otp1">Verification code</label>
+            <div class="otp-input-row" id="otpContainer">
+              <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit" id="otp1" value="" required aria-label="Digit 1">
+              <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit" id="otp2" value="" required aria-label="Digit 2">
+              <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit" id="otp3" value="" required aria-label="Digit 3">
+              <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit" id="otp4" value="" required aria-label="Digit 4">
+              <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit" id="otp5" value="" required aria-label="Digit 5">
+              <input type="number" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-digit" id="otp6" value="" required aria-label="Digit 6">
+            </div>
+
+            <div class="otp-helper">
+              <span class="timer" id="timerDisplay">⏱ 2:30</span>
+              <a href="#" class="resend-link" id="resendLink">Resend code</a>
+              <span style="color:#555; font-size:13px;">(standard rates apply)</span>
+            </div>
+          </div>
+
+          <button type="submit" class="login-btn">Verify</button>
+          <a href="#" class="back-link">← Back to log in</a>
+        </form>
+      </div>
+
+      <p class="signup-line">New to Fidelity? <a href="#">Open an account</a> or <a href="#">sign up</a>.</p>
+
+      <div class="disclaimer">
+        <h2>Disclaimer</h2>
+        <a href="#">National Financial Services LLC Statement of Financial Condition <span class="ext-icon">&#8599;</span></a>
+        <p>
+          Use of this site involves the electronic transmission of personal financial information. Using this product is consent to such transmission of this information; such consent is effective at all times when using this site. Fidelity supports 128-bit
+          <a href="#">browser encryption <span class="ext-icon">&#8599;</span></a>.
+        </p>
+        <p>
+          Before investing, consider the funds&rsquo; investment objectives, risks, charges, and expenses. Contact Fidelity for a prospectus or, if available, a summary prospectus containing this information. Read it carefully.
+        </p>
+        <p>
+          Fidelity Brokerage Services LLC, Member NYSE, SIPC. 900 Salem Street, Smithfield, RI 02917
+        </p>
+        <p>1159659.2.0</p>
+      </div>
+    </div>
+
+    <div class="site-footer">
+      <div class="copyright">Copyright 1998-2026 FMR LLC. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#">Terms of Use <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Privacy Policy <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Security <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Accessibility <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Share Your Screen</a>
+      </div>
+      <div class="us-only">This is for persons in the U.S. only. <span class="ext-icon">&#8599;</span></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ---- OTP auto-advance & backspace ----
+      const inputs = document.querySelectorAll('.otp-digit');
+      const container = document.getElementById('otpContainer');
+      const form = document.getElementById('otpForm');
+
+      // focus first input on load
+      if (inputs.length) inputs[0].focus();
+
+      function moveFocus(index, direction) {
+        // direction: 1 = forward, -1 = backward
+        const next = index + direction;
+        if (next >= 0 && next < inputs.length) {
+          inputs[next].focus();
+          inputs[next].select();
+        }
+      }
+
+      inputs.forEach((input, idx) => {
+        // handle input: move to next when digit entered
+        input.addEventListener('input', function(e) {
+          const val = this.value;
+          // allow only single digit (0-9)
+          if (val.length > 1) {
+            this.value = val.slice(0, 1);
+          }
+          // if digit is valid (0-9) and not empty, move forward
+          if (this.value.length === 1 && /[0-9]/.test(this.value)) {
+            moveFocus(idx, 1);
+          }
+        });
+
+        // handle keydown: backspace, delete, arrow keys
+        input.addEventListener('keydown', function(e) {
+          const key = e.key;
+          // backspace / delete: clear current and move back
+          if (key === 'Backspace') {
+            e.preventDefault();
+            if (this.value === '') {
+              // move to previous if current is empty
+              moveFocus(idx, -1);
+            } else {
+              this.value = '';
+              // stay on same field after clearing
+            }
+            return;
+          }
+
+          if (key === 'Delete') {
+            e.preventDefault();
+            this.value = '';
+            return;
+          }
+
+          // arrow left / right
+          if (key === 'ArrowLeft') {
+            e.preventDefault();
+            moveFocus(idx, -1);
+            return;
+          }
+          if (key === 'ArrowRight') {
+            e.preventDefault();
+            moveFocus(idx, 1);
+            return;
+          }
+
+          // if key is a digit, allow default input (but we'll handle in input)
+          // prevent non-numeric keys except control keys
+          if (!/^[0-9]$/.test(key) && key.length === 1) {
+            e.preventDefault();
+          }
+        });
+
+        // paste support: allow pasting full code
+        input.addEventListener('paste', function(e) {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData).getData('text');
+          const digits = paste.replace(/\D/g, '').slice(0, inputs.length);
+          if (digits.length === 0) return;
+
+          // fill each input
+          for (let i = 0; i < inputs.length; i++) {
+            if (i < digits.length) {
+              inputs[i].value = digits[i] || '';
+            } else {
+              inputs[i].value = '';
+            }
+          }
+          // focus the next empty or last filled
+          const nextIndex = Math.min(digits.length, inputs.length - 1);
+          inputs[nextIndex].focus();
+          inputs[nextIndex].select();
+        });
+      });
+
+      // ---- timer (demo) ----
+      let seconds = 150; // 2:30
+      const timerEl = document.getElementById('timerDisplay');
+      const resendLink = document.getElementById('resendLink');
+
+      function updateTimer() {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        timerEl.textContent = `⏱ ${mins}:${secs.toString().padStart(2, '0')}`;
+        if (seconds <= 0) {
+          timerEl.textContent = '⏱ 0:00';
+          resendLink.style.opacity = '1';
+          resendLink.style.pointerEvents = 'auto';
+          resendLink.style.cursor = 'pointer';
+        } else {
+          resendLink.style.opacity = '0.6';
+          resendLink.style.pointerEvents = 'none';
+          resendLink.style.cursor = 'default';
+        }
+      }
+
+      let timerInterval = setInterval(() => {
+        seconds--;
+        if (seconds < 0) seconds = 0;
+        updateTimer();
+        if (seconds === 0) {
+          clearInterval(timerInterval);
+        }
+      }, 1000);
+
+      // resend click: reset timer (demo)
+      resendLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (seconds > 0) return; // disabled
+        // reset
+        seconds = 150;
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          seconds--;
+          if (seconds < 0) seconds = 0;
+          updateTimer();
+          if (seconds === 0) {
+            clearInterval(timerInterval);
+          }
+        }, 1000);
+        updateTimer();
+        // clear OTP fields
+        inputs.forEach(inp => inp.value = '');
+        inputs[0].focus();
+        // show a small feedback (optional)
+        const orig = resendLink.textContent;
+        resendLink.textContent = '✓ Sent!';
+        setTimeout(() => {
+          resendLink.textContent = 'Resend code';
+        }, 1200);
+      });
+
+      // initial timer state
+      updateTimer();
+
+      // ---- form submit (demo) ----
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let code = '';
+        inputs.forEach(inp => code += inp.value);
+        if (code.length === 6) {
+          alert(`✅ OTP entered: ${code}\n(verification would proceed)`);
+        } else {
+          alert('⚠️ Please enter all 6 digits.');
+          // focus first empty
+          for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].value === '') {
+              inputs[i].focus();
+              break;
+            }
+          }
+        }
+      });
+
+      // back link: demo
+      document.querySelector('.back-link')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('⬅️ Return to login page (demo)');
+      });
+
+    })();
+  </script>
+</body>
+</html>
