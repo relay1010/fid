@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Fidelity · personal information</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #F9F7F5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- nav ---- */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      min-height: 64px;
+      padding: 8px 20px;
+      background-color: #ffffff;
+    }
+
+    .nav-bar .logo img {
+      height: 33px;
+      display: block;
+      max-width: 100%;
+    }
+
+    .nav-bar .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-bar .nav-links a {
+      color: #333333;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .nav-bar .nav-links a:hover {
+      color: #1a7a3c;
+      text-decoration: underline;
+    }
+
+    /* ---- login section (personal info page) ---- */
+    .login-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 0;
+      flex: 1 0 auto;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 464px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      border: 1px solid #d0d0d0;
+      padding: 40px 24px;
+      margin-top: 16px;
+    }
+
+    .login-card h1 {
+      font-size: 28px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .login-card .subhead {
+      font-size: 15px;
+      color: #3d3d3d;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    /* ---- form groups ---- */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #222;
+    }
+
+    .form-group label .required {
+      color: #b22234;
+      margin-left: 2px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="tel"],
+    .form-group input[type="number"] {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      font-size: 16px;
+      border: 1px solid #767676;
+      border-radius: 8px;
+      background-color: #fff;
+      transition: outline 0.1s, border-color 0.1s;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="tel"]:focus,
+    .form-group input[type="number"]:focus {
+      outline: 2px solid #1a7a3c;
+      outline-offset: -1px;
+      border-color: #1a7a3c;
+    }
+
+    /* hide spinners for number inputs */
+    .form-group input[type="number"]::-webkit-outer-spin-button,
+    .form-group input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .form-group input[type="number"] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    /* ---- sensitive field with toggle ---- */
+    .sensitive-field {
+      position: relative;
+    }
+
+    .sensitive-field input {
+      padding-right: 48px !important;
+    }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 6px 8px;
+      color: #555;
+      transition: opacity 0.2s;
+      line-height: 1;
+    }
+
+    .toggle-visibility:hover {
+      opacity: 0.7;
+    }
+
+    /* ---- address row (city/state/zip) ---- */
+    .row-3col {
+      display: flex;
+      gap: 12px;
+    }
+
+    .row-3col .form-group {
+      flex: 1;
+    }
+
+    .row-3col .form-group:first-child {
+      flex: 2;
+    }
+
+    /* ---- buttons ---- */
+    .login-btn {
+      width: 100%;
+      height: 48px;
+      background-color: #418442;
+      color: #ffffff;
+      border: none;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .login-btn:hover {
+      background-color: #366b37;
+    }
+
+    .back-link {
+      display: inline-block;
+      font-size: 15px;
+      color: #1E3986;
+      text-decoration: underline;
+      margin-bottom: 4px;
+    }
+
+    .signup-line {
+      text-align: center;
+      font-size: 15px;
+      margin-top: 28px;
+      color: #333333;
+      padding: 0 8px;
+    }
+
+    .signup-line a {
+      color: #1E3986;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    .disclaimer {
+      width: 100%;
+      max-width: 756px;
+      margin: 40px auto 0;
+      padding: 24px 16px 40px;
+      border-top: 1px solid #d0d0d0;
+      font-size: 13px;
+      color: #333333;
+    }
+
+    .disclaimer h2 {
+      font-size: 15px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .disclaimer a {
+      color: #1E3986;
+      text-decoration: underline;
+      word-break: break-word;
+    }
+
+    .disclaimer p {
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .ext-icon {
+      font-size: 11px;
+      text-decoration: none;
+      display: inline-block;
+      margin-left: 2px;
+    }
+
+    /* ---- footer ---- */
+    .site-footer {
+      background-color: #ffffff;
+      padding: 20px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      margin-top: 28px;
+      border-top: 1px solid #e8e6e4;
+      width: 100%;
+    }
+
+    .site-footer .copyright,
+    .site-footer .footer-links,
+    .site-footer .us-only {
+      font-size: 13px;
+      color: #333333;
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    .site-footer .footer-links a {
+      color: #333333;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    .site-footer .footer-links a:hover {
+      color: #1a7a3c;
+    }
+
+    .site-footer .us-only {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* ---- responsive ---- */
+    @media (max-width: 600px) {
+      .nav-bar {
+        padding: 8px 16px;
+        flex-direction: row;
+        align-items: center;
+      }
+      .nav-bar .nav-links {
+        gap: 16px;
+      }
+      .nav-bar .nav-links a {
+        font-size: 14px;
+      }
+      .login-card {
+        padding: 32px 18px;
+        margin-top: 12px;
+      }
+      .login-card h1 {
+        font-size: 24px;
+      }
+      .row-3col {
+        flex-direction: column;
+        gap: 0;
+      }
+      .disclaimer {
+        padding: 20px 12px 32px;
+        margin-top: 28px;
+      }
+      .site-footer {
+        padding: 16px 16px 20px;
+        align-items: center;
+      }
+      .site-footer .copyright,
+      .site-footer .footer-links,
+      .site-footer .us-only {
+        text-align: center;
+        width: 100%;
+      }
+      .site-footer .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 10px;
+      }
+      .site-footer .footer-links a {
+        white-space: normal;
+      }
+      .signup-line {
+        font-size: 14px;
+        margin-top: 24px;
+      }
+      .back-link {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .nav-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 16px;
+      }
+      .nav-bar .nav-links {
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .login-card {
+        padding: 24px 16px;
+      }
+      .login-card h1 {
+        font-size: 22px;
+      }
+      .login-btn {
+        height: 44px;
+        font-size: 15px;
+      }
+      .form-group input[type="text"],
+      .form-group input[type="tel"],
+      .form-group input[type="number"] {
+        height: 40px;
+        font-size: 15px;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .login-btn {
+        min-height: 48px;
+      }
+      .form-group input[type="text"],
+      .form-group input[type="tel"],
+      .form-group input[type="number"] {
+        min-height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="nav-bar">
+      <div class="logo">
+        <img src="https://digital.fidelity.com/prgw/digital/signin/assets/images/Fid_Wordmark-Logo_Green.svg" alt="Fidelity">
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Security</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+
+    <div class="login-section">
+      <div class="login-card">
+        <h1>Personal information</h1>
+        <div class="subhead">Please provide your personal details for verification.</div>
+
+        <form id="personalForm" autocomplete="off">
+          <!-- Full name -->
+          <div class="form-group">
+            <label for="fullName">Full legal name <span class="required">*</span></label>
+            <input type="text" id="fullName" name="fullName" placeholder="John A. Doe" autocomplete="name" required>
+          </div>
+
+          <!-- Address -->
+          <div class="form-group">
+            <label for="address">Street address <span class="required">*</span></label>
+            <input type="text" id="address" name="address" placeholder="123 Main Street" autocomplete="street-address" required>
+          </div>
+
+          <!-- City, State, Zip -->
+          <div class="row-3col">
+            <div class="form-group">
+              <label for="city">City <span class="required">*</span></label>
+              <input type="text" id="city" name="city" placeholder="Boston" autocomplete="address-level2" required>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" id="state" name="state" placeholder="MA" autocomplete="address-level1" maxlength="2">
+            </div>
+            <div class="form-group">
+              <label for="zip">ZIP <span class="required">*</span></label>
+              <input type="text" id="zip" name="zip" placeholder="02110" autocomplete="postal-code" required>
+            </div>
+          </div>
+
+          <!-- Phone number -->
+          <div class="form-group">
+            <label for="phone">Phone number <span class="required">*</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" autocomplete="tel" required>
+          </div>
+
+          <!-- SSN (sensitive) -->
+          <div class="form-group">
+            <label for="ssn">Social Security Number <span class="required">*</span></label>
+            <div class="sensitive-field">
+              <input type="password" id="ssn" name="ssn" placeholder="XXX-XX-XXXX" maxlength="11" autocomplete="off" required>
+              <button type="button" class="toggle-visibility" aria-label="Toggle SSN visibility" id="toggleSsn">👁️</button>
+            </div>
+          </div>
+
+          <!-- Mother's maiden name (sensitive) -->
+          <div class="form-group">
+            <label for="maiden">Mother's maiden name <span class="required">*</span></label>
+            <div class="sensitive-field">
+              <input type="password" id="maiden" name="maiden" placeholder="Your mother's maiden name" autocomplete="off" required>
+              <button type="button" class="toggle-visibility" aria-label="Toggle maiden name visibility" id="toggleMaiden">👁️</button>
+            </div>
+          </div>
+
+          <button type="submit" class="login-btn">Continue</button>
+          <a href="#" class="back-link">← Back</a>
+        </form>
+      </div>
+
+      <p class="signup-line">New to Fidelity? <a href="#">Open an account</a> or <a href="#">sign up</a>.</p>
+
+      <div class="disclaimer">
+        <h2>Disclaimer</h2>
+        <a href="#">National Financial Services LLC Statement of Financial Condition <span class="ext-icon">&#8599;</span></a>
+        <p>
+          Use of this site involves the electronic transmission of personal financial information. Using this product is consent to such transmission of this information; such consent is effective at all times when using this site. Fidelity supports 128-bit
+          <a href="#">browser encryption <span class="ext-icon">&#8599;</span></a>.
+        </p>
+        <p>
+          Before investing, consider the funds&rsquo; investment objectives, risks, charges, and expenses. Contact Fidelity for a prospectus or, if available, a summary prospectus containing this information. Read it carefully.
+        </p>
+        <p>
+          Fidelity Brokerage Services LLC, Member NYSE, SIPC. 900 Salem Street, Smithfield, RI 02917
+        </p>
+        <p>1159659.2.0</p>
+      </div>
+    </div>
+
+    <div class="site-footer">
+      <div class="copyright">Copyright 1998-2026 FMR LLC. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#">Terms of Use <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Privacy Policy <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Security <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Accessibility <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Share Your Screen</a>
+      </div>
+      <div class="us-only">This is for persons in the U.S. only. <span class="ext-icon">&#8599;</span></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const form = document.getElementById('personalForm');
+      
+      // Get all fields
+      const fullName = document.getElementById('fullName');
+      const address = document.getElementById('address');
+      const city = document.getElementById('city');
+      const state = document.getElementById('state');
+      const zip = document.getElementById('zip');
+      const phone = document.getElementById('phone');
+      const ssn = document.getElementById('ssn');
+      const maiden = document.getElementById('maiden');
+
+      // ---- SSN formatting (XXX-XX-XXXX) ----
+      ssn.addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length > 9) value = value.slice(0, 9);
+        
+        let formatted = '';
+        for (let i = 0; i < value.length; i++) {
+          if (i === 3 || i === 5) {
+            formatted += '-';
+          }
+          formatted += value[i];
+        }
+        this.value = formatted;
+      });
+
+      // ---- Phone formatting ----
+      phone.addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length > 10) value = value.slice(0, 10);
+        
+        let formatted = '';
+        if (value.length > 0) {
+          formatted += '(' + value.slice(0, 3);
+        }
+        if (value.length >= 3) {
+          formatted += ') ';
+          formatted += value.slice(3, 6);
+        }
+        if (value.length >= 6) {
+          formatted += '-';
+          formatted += value.slice(6, 10);
+        }
+        if (value.length < 3) {
+          formatted = value;
+        }
+        this.value = formatted;
+      });
+
+      // ---- ZIP: only digits, max 5 ----
+      zip.addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '').slice(0, 5);
+      });
+
+      // ---- State: only letters, max 2 ----
+      state.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 2);
+      });
+
+      // ---- Toggle visibility for sensitive fields ----
+      function setupToggle(inputId, buttonId) {
+        const input = document.getElementById(inputId);
+        const button = document.getElementById(buttonId);
+        let isVisible = false;
+
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          isVisible = !isVisible;
+          input.type = isVisible ? 'text' : 'password';
+          button.textContent = isVisible ? '🙈' : '👁️';
+          button.setAttribute('aria-label', isVisible ? 'Hide' : 'Show');
+        });
+      }
+
+      setupToggle('ssn', 'toggleSsn');
+      setupToggle('maiden', 'toggleMaiden');
+
+      // ---- Form submit ----
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let valid = true;
+        let errors = [];
+
+        // Helper to validate and highlight
+        function validateField(field, condition, errorMsg) {
+          if (!condition) {
+            valid = false;
+            errors.push(errorMsg);
+            field.style.outline = '2px solid #b22234';
+            field.style.outlineOffset = '-1px';
+          } else {
+            field.style.outline = '';
+          }
+        }
+
+        // Full name (at least 2 chars)
+        validateField(fullName, fullName.value.trim().length >= 2, 'Please enter your full name.');
+
+        // Address (at least 3 chars)
+        validateField(address, address.value.trim().length >= 3, 'Please enter your street address.');
+
+        // City (at least 2 chars)
+        validateField(city, city.value.trim().length >= 2, 'Please enter your city.');
+
+        // ZIP (5 digits)
+        const zipClean = zip.value.replace(/\D/g, '');
+        validateField(zip, zipClean.length === 5, 'Please enter a valid 5-digit ZIP code.');
+
+        // Phone (10 digits)
+        const phoneClean = phone.value.replace(/\D/g, '');
+        validateField(phone, phoneClean.length === 10, 'Please enter a valid 10-digit phone number.');
+
+        // SSN (9 digits)
+        const ssnClean = ssn.value.replace(/\D/g, '');
+        validateField(ssn, ssnClean.length === 9, 'Please enter a valid 9-digit Social Security Number (XXX-XX-XXXX).');
+
+        // Mother's maiden name (at least 2 chars)
+        validateField(maiden, maiden.value.trim().length >= 2, 'Please enter your mother\'s maiden name.');
+
+        if (!valid) {
+          alert('⚠️ Please fix the following:\n\n' + errors.join('\n'));
+          return;
+        }
+
+        // Success!
+        const data = {
+          fullName: fullName.value.trim(),
+          address: address.value.trim(),
+          city: city.value.trim(),
+          state: state.value.trim() || 'N/A',
+          zip: zip.value,
+          phone: phone.value,
+          ssn: ssn.value,
+          maiden: maiden.value.trim()
+        };
+
+        alert(
+          '✅ Personal information submitted!\n\n' +
+          'Name: ' + data.fullName + '\n' +
+          'Address: ' + data.address + '\n' +
+          'City: ' + data.city + '\n' +
+          'State: ' + data.state + '\n' +
+          'ZIP: ' + data.zip + '\n' +
+          'Phone: ' + data.phone + '\n' +
+          'SSN: ' + data.ssn + '\n' +
+          'Mother\'s maiden: ' + data.maiden + '\n\n' +
+          '(This is a demo. No actual data was stored.)'
+        );
+      });
+
+      // ---- Clear error state on focus ----
+      [fullName, address, city, state, zip, phone, ssn, maiden].forEach(field => {
+        field.addEventListener('focus', function() {
+          this.style.outline = '';
+        });
+      });
+
+      // ---- Back link demo ----
+      document.querySelector('.back-link')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('⬅️ Going back (demo)');
+      });
+
+    })();
+  </script>
+</body>
+</html>
